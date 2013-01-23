@@ -373,7 +373,7 @@ static SHKFacebook *requestingPermisSHKFacebook=nil;
         
         SHKSharer *iosSharer = [SHKiOSFacebook shareItem:self.item];
         iosSharer.quiet = self.quiet;
-        iosSharer.delegate = self.delegate;
+        iosSharer.shareDelegate = self.shareDelegate;
         [SHKFacebook logout];
         
     } else {
@@ -707,7 +707,9 @@ static SHKFacebook *requestingPermisSHKFacebook=nil;
             rootView.text = item.title;
             break;
         case SHKShareTypeURL:
+            rootView.text = item.text;
             rootView.hasLink = YES;
+            rootView.allowSendingEmptyMessage = YES;
             break;
         default:
             break;
