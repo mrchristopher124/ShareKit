@@ -620,7 +620,7 @@ static SHKFacebook *requestingPermisSHKFacebook=nil;
     {
         [self setQuiet:YES];
         
-        NSString *graphPath = [item customValueForKey:@"graphPath"];
+        NSString *graphPath = [self.item customValueForKey:@"graphPath"];
         
         FBRequestConnection* con = [FBRequestConnection startWithGraphPath:graphPath
                                                                 parameters:params
