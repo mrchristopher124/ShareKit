@@ -616,7 +616,7 @@ static SHKFacebook *requestingPermisSHKFacebook=nil;
 		}];
 		[self.pendingConnections addObject:con];
 	}
-    else if (item.shareType == SHKShareTypeUndefined)
+    else if (self.item.shareType == SHKShareTypeUndefined)
     {
         [self setQuiet:YES];
         
