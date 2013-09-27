@@ -8,6 +8,7 @@
 
 #import "SHKSinaWeibo.h"
 #import "SHKiOSSharer_Protected.h"
+#import "SharersCommonHeaders.h"
 
 @interface SHKSinaWeibo ()
 
@@ -20,7 +21,7 @@
 
 + (NSString *)sharerTitle
 {
-	return @"Sina Weibo";
+	return SHKLocalizedString(@"Sina Weibo");
 }
 
 + (NSString *)sharerId

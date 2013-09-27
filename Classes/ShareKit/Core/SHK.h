@@ -28,31 +28,37 @@
 #define SHK_VERSION @"0.2.1"
 
 #import <Foundation/Foundation.h>
-#import "DefaultSHKConfigurator.h"
-#import "SHKItem.h"
-#import "SHKActionSheet.h"
-#import "SHKRequest.h"
-#import "SHKActivityIndicator.h"
-#import "SHKFormFieldSettings.h"
-#import "UIWebView+SHK.h"
-
-extern NSString * const SHKHideCurrentViewFinishedNotification;
 
 @class SHKActionSheet;
+@class SHKItem;
+@class SHKSharer;
+
+extern NSString * const SHKSendDidStartNotification;
+extern NSString * const SHKSendDidFinishNotification;
+extern NSString * const SHKSendDidFailWithErrorNotification;
+extern NSString * const SHKSendDidCancelNotification;
+extern NSString * const SHKAuthDidFinishNotification;
 
 @interface SHK : NSObject 
 
-@property (nonatomic, retain) UIViewController *currentView;
-@property (nonatomic, retain) UIViewController *pendingView;
+@property (nonatomic, strong) UIViewController *currentView;
+@property (nonatomic, strong) UIViewController *pendingView;
 @property BOOL isDismissingView;
 
-@property (nonatomic, retain) NSOperationQueue *offlineQueue;
+@property (nonatomic, strong) NSOperationQueue *offlineQueue;
 
 #pragma mark -
 
 + (SHK *)currentHelper;
 
 + (NSDictionary *)sharersDictionary;
+
+#pragma mark -
+#pragma mark Sharer Management
+
+//some sharers need to be retained until callback from UI or web service, otherwise they would be prematurely deallocated. Each sharer is responsible for removing itself on callback.
+- (void)keepSharerReference:(SHKSharer *)sharer;
+- (void)removeSharerReference:(SHKSharer *)sharer;
 
 #pragma mark -
 #pragma mark View Management
@@ -71,14 +77,14 @@ extern NSString * const SHKHideCurrentViewFinishedNotification;
 
 + (UIBarStyle)barStyle;
 + (UIModalPresentationStyle)modalPresentationStyleForController:(UIViewController *)controller;
-+ (UIModalTransitionStyle)modalTransitionStyle;
++ (UIModalTransitionStyle)modalTransitionStyleForController:(UIViewController *)controller;
 
 #pragma mark -
 #pragma mark Favorites
 
-+ (NSArray *)favoriteSharersForType:(SHKShareType)type;
-+ (void)pushOnFavorites:(NSString *)className forType:(SHKShareType)type;
-+ (void)setFavorites:(NSArray *)favs forType:(SHKShareType)type;
++ (NSArray *)favoriteSharersForItem:(SHKItem *)item;
++ (void)pushOnFavorites:(NSString *)className forItem:(SHKItem *)item;
++ (void)setFavorites:(NSArray *)favs forItem:(SHKItem *)item;
 
 #pragma mark -
 #pragma mark Credentials
@@ -111,15 +117,7 @@ extern NSString * const SHKHideCurrentViewFinishedNotification;
 
 @end
 
-NSString * SHKStringOrBlank(NSString * value);
 NSString * SHKEncode(NSString * value);
 NSString * SHKEncodeURL(NSURL * value);
 NSString * SHKFlattenHTML(NSString * value, BOOL preserveLineBreaks);
 NSString * SHKLocalizedString(NSString* key, ...);
-void SHKSwizzle(Class c, SEL orig, SEL newClassName);
-
-@interface NSFileManager (DoNotBackup)
-
-- (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
-
-@end
